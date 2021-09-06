@@ -1,7 +1,9 @@
+// import 'dotenv';
 import React from 'react';
 import 'react-bootstrap';
 import axios from 'axios';
 import './App.css';
+
 
 
 
@@ -22,7 +24,7 @@ class App extends React.Component{
 event.preventDefault();
 const cityName=event.target.cityName.value;
 const myKey=process.env.REACT_APP_API;
-const url=`https://us1.locationiq.com/v1/search.php?key=${myKey}&q=${cityName}&format=json`;
+const url=`https://eu1.locationiq.com/v1/search.php?key=${myKey}q=${cityName}&format=json`;
 
 try {
 let resResult= await axios.get(url);
