@@ -24,7 +24,7 @@ class App extends React.Component{
 event.preventDefault();
 const cityName=event.target.cityName.value;
 const myKey=process.env.REACT_APP_API;
-const url=`https://eu1.locationiq.com/v1/search.php?key=${myKey}&q=${cityName}&format=json`;
+const url=`http://localhost:3010/city?city_name=${cityName}`;
 
 try {
 let resResult= await axios.get(url);
