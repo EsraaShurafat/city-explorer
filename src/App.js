@@ -15,8 +15,11 @@ class App extends React.Component{
       lon:'',
       displayName:'',
       mapFlag:false,
+      weatherFlag:false,
       displayError:false,
+      weatherArr:[]
 
+      
     })
   };
 
@@ -25,18 +28,20 @@ event.preventDefault();
 const cityName=event.target.cityName.value;
 const myKey=process.env.REACT_APP_API;
 const url=`https://eu1.locationiq.com/v1/search.php?key=${myKey}&q=${cityName}&format=json`;
+//https://eu1.locationiq.com/v1/search.php?key=${myKey}&q=${cityName}&format=json
 
 try {
 let resResult= await axios.get(url);
 console.log(resResult.data);
 
-this.setState({
+await this.setState({
   lat:resResult.data[0].lat,
   lon:resResult.data[0].lon,
   displayName:resResult.data[0].display_name,
   mapFlag:true,
 
 });
+this.getWeatherData();
 
 }
 
@@ -49,6 +54,38 @@ displayError:true,
 }
 
   };
+
+getWeatherData = async ()=>{
+//https://class-07.herokuapp.com/weather?lat=47.6038321&lon=-122.3300624
+  const url1 =` https://class-07.herokuapp.com/weather?lat=${this.state.lat}&lon=${this.state.lon}`;
+  try{
+    let resResultWeather= await axios.get(url1);
+      console.log(resResultWeather.data);
+
+      this.setState({
+        weatherArr:resResultWeather.data,
+        weatherFlag:true,
+      });
+
+  }
+  catch {
+    this.setState({
+    displayError:true,
+    });
+    
+    
+    }
+
+
+
+};
+
+
+
+
+
+
+
 
 
   render(){
@@ -66,9 +103,17 @@ displayError:true,
 <p>{this.state.lat}</p>
 <p>{this.state.lon}</p>
 {this.state.mapFlag && <img src={`https://maps.locationiq.com/v3/staticmap?key=pk.43fed3791d35ddb76aa14f749c6d3080&center=${this.state.lat},${this.state.lon}`} alt="map"></img> }
-
-
 {this.state.displayError && <p>Sorry Error</p>}
+
+{this.state.weatherFlag && this.state.weatherArr.map(item=>{
+  return(
+    <>
+    <p>Date:{item.date}</p>
+    <p>Description:{item.discription}</p>
+    </>
+  )
+})}
+
 </div>
       </>
     )
