@@ -24,7 +24,7 @@ class App extends React.Component{
 event.preventDefault();
 const cityName=event.target.cityName.value;
 const myKey=process.env.REACT_APP_API;
-const url=`http://localhost:3010/city?city_name=${cityName}`;
+const url=`https://eu1.locationiq.com/v1/search.php?key=${myKey}&q=${cityName}&format=json`;
 
 try {
 let resResult= await axios.get(url);
@@ -65,7 +65,7 @@ displayError:true,
 <p>{this.state.displayName}</p>
 <p>{this.state.lat}</p>
 <p>{this.state.lon}</p>
-{this.state.mapFlag && <img src={`https://maps.locationiq.com/v3/staticmap?key=pk.cc9005e9f33a0652af7b183ebe6bd607&center=${this.state.lat},${this.state.lon}`} alt="map"></img> }
+{this.state.mapFlag && <img src={`https://maps.locationiq.com/v3/staticmap?key=pk.43fed3791d35ddb76aa14f749c6d3080&center=${this.state.lat},${this.state.lon}`} alt="map"></img> }
 
 
 {this.state.displayError && <p>Sorry Error</p>}
