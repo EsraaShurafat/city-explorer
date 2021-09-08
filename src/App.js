@@ -3,6 +3,7 @@ import React from 'react';
 import 'react-bootstrap';
 import axios from 'axios';
 import './App.css';
+// import Movies from './components/Movies';
 
 
 
@@ -17,8 +18,10 @@ class App extends React.Component{
       mapFlag:false,
       weatherFlag:false,
       displayError:false,
-      weatherArr:[]
-
+      weatherArr:[],
+      name:'',
+      movieArr:[],
+      movieFlag:false,
       
     })
   };
@@ -28,20 +31,30 @@ event.preventDefault();
 const cityName=event.target.cityName.value;
 const myKey=process.env.REACT_APP_API;
 const url=`https://eu1.locationiq.com/v1/search.php?key=${myKey}&q=${cityName}&format=json`;
+const url1 =`https://class-07.herokuapp.com/weather?name=${cityName}`;
 //https://eu1.locationiq.com/v1/search.php?key=${myKey}&q=${cityName}&format=json
-
+const url2 =`https://class-07.herokuapp.com/movies?name=${cityName}`;
 try {
 let resResult= await axios.get(url);
-console.log(resResult.data);
+// console.log(resResult.data);
+let resResultWeather= await axios.get(url1);
+// console.log(resResultWeather.data);
+let resResultMovies= await axios.get(url2);
+console.log(resResultMovies.data);
 
 await this.setState({
   lat:resResult.data[0].lat,
   lon:resResult.data[0].lon,
   displayName:resResult.data[0].display_name,
   mapFlag:true,
+  name:cityName,
+  weatherArr:resResultWeather.data,
+  weatherFlag:true,
+  movieArr:resResultMovies.data,
+  movieFlag:true,
 
 });
-this.getWeatherData();
+
 
 }
 
@@ -55,38 +68,6 @@ displayError:true,
 
   };
 
-getWeatherData = async ()=>{
-//https://class-07.herokuapp.com/weather?lat=47.6038321&lon=-122.3300624
-  const url1 =` https://class-07.herokuapp.com/weather?lat=${this.state.lat}&lon=${this.state.lon}`;
-  try{
-    let resResultWeather= await axios.get(url1);
-      console.log(resResultWeather.data);
-
-      this.setState({
-        weatherArr:resResultWeather.data,
-        weatherFlag:true,
-      });
-
-  }
-  catch {
-    this.setState({
-    displayError:true,
-    });
-    
-    
-    }
-
-
-
-};
-
-
-
-
-
-
-
-
 
   render(){
     return(
@@ -96,7 +77,7 @@ getWeatherData = async ()=>{
   <div>
     <input style={{textAlign:"center"}}  type="text"  id="cityName" name="cityName" aria-describedby="emailHelp" placeholder="Enter City Name"/>
   </div>
-  <button  type="submit">Submit</button>
+  <button  type="submit">Exploer</button>
 </form>
 <div style={{textAlign:"center"}}>
 <p>{this.state.displayName}</p>
@@ -115,6 +96,22 @@ getWeatherData = async ()=>{
 })}
 
 </div>
+
+ {this.state.movieFlag && this.state.movieArr.map(item=>{
+  return(
+    <>
+    <p>{item.title}</p>
+    <p>{item.overview}</p>
+    <p>{item.average_votes}</p>
+    <p>{item.total_votes}</p>
+    <p>{item.popularity}</p>
+    <p>{item.released_on}</p>
+    </>)
+ })}
+
+
+
+
       </>
     )
   }
